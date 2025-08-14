@@ -8,42 +8,90 @@
     </head>
     <body>
         <h1>Simple Harmonic Motion Calculator</h1>
-        <h3>Please enter the mass (m) of the object</h3>
-        <input type="number" id="mass" placeholder="Mass (kg)" required>
-        <br>
-        <h3>Please enter the spring constant (k)</h3>
-        <input type="number" id="spring" placeholder="Spring constant (N/m)" required>
-        <br>
-        <h3>Please enter the displacement (x) from equilibrium</h3>
-        <input type="number" id="displacement" placeholder="Displacement (m)" required>
-        <br>
+        <label for="equationType">Choose what to calculate:</label>
+        <select id="equationType" onchange="updateInputs()">
+            <option value="force">Restoring Force (F = -kx)</option>
+            <option value="omega">Angular Frequency (ω = sqrt(k/m))</option>
+            <option value="period">Period (T = 2π√(m/k))</option>
+        </select>
+        <br><br>
+        <div id="forceInputs">
+            <h3>Mass (m):</h3>
+            <input type="number" id="massF" placeholder="Mass (kg)">
+            <br>
+            <h3>Spring constant (k):</h3>
+            <input type="number" id="springF" placeholder="Spring constant (N/m)">
+            <br>
+            <h3>Displacement (x):</h3>
+            <input type="number" id="displacementF" placeholder="Displacement (m)">
+            <br>
+        </div>
+        <div id="omegaInputs" style="display:none;">
+            <h3>Mass (m):</h3>
+            <input type="number" id="massO" placeholder="Mass (kg)">
+            <br>
+            <h3>Spring constant (k):</h3>
+            <input type="number" id="springO" placeholder="Spring constant (N/m)">
+            <br>
+        </div>
+        <div id="periodInputs" style="display:none;">
+            <h3>Mass (m):</h3>
+            <input type="number" id="massP" placeholder="Mass (kg)">
+            <br>
+            <h3>Spring constant (k):</h3>
+            <input type="number" id="springP" placeholder="Spring constant (N/m)">
+            <br>
+        </div>
         <br>
         <button id="calculate" onclick="calculate()">Calculate</button>
         <div id="result"></div>
         <br>
-        <p>Note: This calculator assumes a simple harmonic oscillator (like a mass on a spring). It calculates the restoring force, angular frequency, and period.</p>
+        <p>Note: This calculator assumes a simple harmonic oscillator (like a mass on a spring). Select which value to calculate.</p>
         <br>
         <script>
-            function calculate() {
-                const m = parseFloat(document.getElementById('mass').value);
-                const k = parseFloat(document.getElementById('spring').value);
-                const x = parseFloat(document.getElementById('displacement').value);
-                if (isNaN(m) || isNaN(k) || isNaN(x) || m <= 0 || k <= 0) {
-                    document.getElementById('result').innerText = 'Please enter valid positive numbers for mass and spring constant.';
-                    return;
-                }
-                // Restoring force F = -kx
-                const F = -k * x;
-                // Angular frequency ω = sqrt(k/m)
-                const omega = Math.sqrt(k / m);
-                // Period T = 2π * sqrt(m/k)
-                const T = 2 * Math.PI * Math.sqrt(m / k);
-                document.getElementById('result').innerHTML = `
-                    <p>Restoring Force (F): ${F.toFixed(2)} N</p>
-                    <p>Angular Frequency (ω): ${omega.toFixed(2)} rad/s</p>
-                    <p>Period (T): ${T.toFixed(2)} s</p>
-                `;
+            function updateInputs() {
+                const type = document.getElementById('equationType').value;
+                document.getElementById('forceInputs').style.display = type === 'force' ? '' : 'none';
+                document.getElementById('omegaInputs').style.display = type === 'omega' ? '' : 'none';
+                document.getElementById('periodInputs').style.display = type === 'period' ? '' : 'none';
             }
+            function calculate() {
+                const type = document.getElementById('equationType').value;
+                let result = '';
+                if (type === 'force') {
+                    const m = parseFloat(document.getElementById('massF').value);
+                    const k = parseFloat(document.getElementById('springF').value);
+                    const x = parseFloat(document.getElementById('displacementF').value);
+                    if (isNaN(m) || isNaN(k) || isNaN(x) || m <= 0 || k <= 0) {
+                        document.getElementById('result').innerText = 'Please enter valid positive numbers for mass, spring constant, and displacement.';
+                        return;
+                    }
+                    const F = -k * x;
+                    result = `<p>Restoring Force (F): ${F.toFixed(2)} N</p>`;
+                } else if (type === 'omega') {
+                    const m = parseFloat(document.getElementById('massO').value);
+                    const k = parseFloat(document.getElementById('springO').value);
+                    if (isNaN(m) || isNaN(k) || m <= 0 || k <= 0) {
+                        document.getElementById('result').innerText = 'Please enter valid positive numbers for mass and spring constant.';
+                        return;
+                    }
+                    const omega = Math.sqrt(k / m);
+                    result = `<p>Angular Frequency (ω): ${omega.toFixed(2)} rad/s</p>`;
+                } else if (type === 'period') {
+                    const m = parseFloat(document.getElementById('massP').value);
+                    const k = parseFloat(document.getElementById('springP').value);
+                    if (isNaN(m) || isNaN(k) || m <= 0 || k <= 0) {
+                        document.getElementById('result').innerText = 'Please enter valid positive numbers for mass and spring constant.';
+                        return;
+                    }
+                    const T = 2 * Math.PI * Math.sqrt(m / k);
+                    result = `<p>Period (T): ${T.toFixed(2)} s</p>`;
+                }
+                document.getElementById('result').innerHTML = result;
+            }
+            window.onload = updateInputs;
         </script>
     </body>
+</html>
+
 </html>
