@@ -8,43 +8,9 @@
     </head>
     <body>
         <h1>Physics Calculator</h1>
-        <h3>Please enter mass of the object</h3>
-        <input type="number" id="mass" placeholder="Mass (kg)" required>
-        <br>
-        <h3>Please enter time the object has been falling</h3>
-        <input type="number" id="time" placeholder="Time" required>
-        <br>
-        <br>
-        <button id="calculate" onclick="calculate()">Calculate</button>
-        <div id="result"></div>
-        <br>
-        <br>
-        <img src="https://media.istockphoto.com/id/1314509780/vector/mountain-landslide-with-falling-rocks-stones-in-cartoon-flat-style-isolated-on-white.jpg?s=612x612&w=0&k=20&c=7Hv0BE0hs39xf9Oy2lxMPehtcLl0rVgkKd-QJsIxhY8=" />
-        <br>
-        <p>Note: This calculator assumes the object is falling freely under the influence of gravity without air resistance.</p>
-        <br>
-
-        <script>
-            function calculate() {
-                const mass = parseFloat(document.getElementById('mass').value);
-                const time = parseFloat(document.getElementById('time').value);
-                const g = 9.81; // Acceleration due to gravity in m/s²
-
-                if (isNaN(mass) || isNaN(time) || mass <= 0 || time < 0) {
-                    document.getElementById('result').innerText = 'Please enter valid positive numbers for mass and time.';
-                    return;
-                }
-
-                const force = mass * g; // Force in Newtons
-                const velocity = g * time; // Velocity in m/s
-                const distance = 0.5 * g * Math.pow(time, 2); // Distance in meters
-
-                document.getElementById('result').innerHTML = `
-                    <p>Force: ${force.toFixed(2)} N</p>
-                    <p>Velocity: ${velocity.toFixed(2)} m/s</p>
-                    <p>Distance: ${distance.toFixed(2)} m</p>
-                `;
-            }
-        </script>
+        <p>Hi welcome to my physics calculator</p>
+        <button onclick="location.href='falling.html'">Free Falling Object</button>
+        <button onclick="location.href='projectile.html'">Projectile Motion</button>
+        <button onclick="location.href='gravity.html'">Gravity between two masses</button>
     </body>
 </html>
