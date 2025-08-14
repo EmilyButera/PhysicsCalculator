@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ohm's Law Calculator</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Ohm's Law Calculator</h1>
+        <label for="calcType">Choose what to calculate:</label>
+        <select id="calcType" onchange="updateInputs()">
+            <option value="voltage">Voltage (V)</option>
+            <option value="current">Current (I)</option>
+            <option value="resistance">Resistance (R)</option>
+        </select>
+        <br><br>
+        <div id="voltageInputs">
+            <label>Current (I) in Amperes:</label>
+            <input type="number" id="currentV" placeholder="Current (A)">
+            <br>
+            <label>Resistance (R) in Ohms:</label>
+            <input type="number" id="resistanceV" placeholder="Resistance (Ω)">
+            <br>
+        </div>
+        <div id="currentInputs" style="display:none;">
+            <label>Voltage (V) in Volts:</label>
+            <input type="number" id="voltageI" placeholder="Voltage (V)">
+            <br>
+            <label>Resistance (R) in Ohms:</label>
+            <input type="number" id="resistanceI" placeholder="Resistance (Ω)">
+            <br>
+        </div>
+        <div id="resistanceInputs" style="display:none;">
+            <label>Voltage (V) in Volts:</label>
+            <input type="number" id="voltageR" placeholder="Voltage (V)">
+            <br>
+            <label>Current (I) in Amperes:</label>
+            <input type="number" id="currentR" placeholder="Current (A)">
+            <br>
+        </div>
+        <br>
+        <button id="calculate" onclick="calculate()">Calculate</button>
+        <div id="result"></div>
+        <br>
+        <p>Note: Ohm's Law relates voltage (V), current (I), and resistance (R) as V = I × R.</p>
+        <br>
+        <script>
+            function updateInputs() {
+                const type = document.getElementById('calcType').value;
+                document.getElementById('voltageInputs').style.display = type === 'voltage' ? '' : 'none';
+                document.getElementById('currentInputs').style.display = type === 'current' ? '' : 'none';
+                document.getElementById('resistanceInputs').style.display = type === 'resistance' ? '' : 'none';
+            }
+            function calculate() {
+                const type = document.getElementById('calcType').value;
+                let result = '';
+                if (type === 'voltage') {
+                    const I = parseFloat(document.getElementById('currentV').value);
+                    const R = parseFloat(document.getElementById('resistanceV').value);
+                    if (isNaN(I) || isNaN(R)) {
+                        document.getElementById('result').innerText = 'Please enter valid numbers for current and resistance.';
+                        return;
+                    }
+                    const V = I * R;
+                    result = `<p>Voltage (V): ${V.toFixed(2)} V</p>`;
+                } else if (type === 'current') {
+                    const V = parseFloat(document.getElementById('voltageI').value);
+                    const R = parseFloat(document.getElementById('resistanceI').value);
+                    if (isNaN(V) || isNaN(R) || R === 0) {
+                        document.getElementById('result').innerText = 'Please enter valid numbers for voltage and resistance (resistance cannot be zero).';
+                        return;
+                    }
+                    const I = V / R;
+                    result = `<p>Current (I): ${I.toFixed(2)} A</p>`;
+                } else if (type === 'resistance') {
+                    const V = parseFloat(document.getElementById('voltageR').value);
+                    const I = parseFloat(document.getElementById('currentR').value);
+                    if (isNaN(V) || isNaN(I) || I === 0) {
+                        document.getElementById('result').innerText = 'Please enter valid numbers for voltage and current (current cannot be zero).';
+                        return;
+                    }
+                    const R = V / I;
+                    result = `<p>Resistance (R): ${R.toFixed(2)} Ω</p>`;
+                }
+                document.getElementById('result').innerHTML = result;
+            }
+            window.onload = updateInputs;
+        </script>
+    </body>
+</html>
