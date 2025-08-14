@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Projectile Motion Calculator</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<h1>Projectile Motion Calculator</h1>
+		<h3>Horizontal Motion</h3>
+		<label>Initial horizontal position (x₀):</label>
+		<input type="number" id="x0" placeholder="x₀ (m)" required>
+		<br>
+		<label>Initial horizontal velocity (v₀ₓ):</label>
+		<input type="number" id="v0x" placeholder="v₀ₓ (m/s)" required>
+		<br>
+		<h3>Vertical Motion</h3>
+		<label>Initial vertical position (y₀):</label>
+		<input type="number" id="y0" placeholder="y₀ (m)" required>
+		<br>
+		<label>Initial vertical velocity (v₀ᵧ):</label>
+		<input type="number" id="v0y" placeholder="v₀ᵧ (m/s)" required>
+		<br>
+		<h3>Time</h3>
+		<input type="number" id="time" placeholder="Time (s)" required>
+		<br>
+		<br>
+		<button id="calculate" onclick="calculate()">Calculate</button>
+		<div id="result"></div>
+		<br>
+		<p>Note: This calculator assumes no air resistance. Horizontal motion uses x = x₀ + v₀ₓt, vertical motion uses y = y₀ + v₀ᵧt - (1/2)gt², and velocities are calculated as vₓ = v₀ₓ, vᵧ = v₀ᵧ - gt.</p>
+		<br>
+
+		<script>
+			function calculate() {
+				const x0 = parseFloat(document.getElementById('x0').value);
+				const v0x = parseFloat(document.getElementById('v0x').value);
+				const y0 = parseFloat(document.getElementById('y0').value);
+				const v0y = parseFloat(document.getElementById('v0y').value);
+				const t = parseFloat(document.getElementById('time').value);
+				const g = 9.8; // Acceleration due to gravity in m/s²
+
+				if ([x0, v0x, y0, v0y, t].some(val => isNaN(val))) {
+					document.getElementById('result').innerText = 'Please enter valid numbers for all fields.';
+					return;
+				}
+
+				// Horizontal motion
+				const x = x0 + v0x * t;
+				const vx = v0x;
+
+				// Vertical motion
+				const y = y0 + v0y * t - 0.5 * g * Math.pow(t, 2);
+				const vy = v0y - g * t;
+				const vy2 = Math.pow(v0y, 2) - 2 * g * (y - y0);
+
+				document.getElementById('result').innerHTML = `
+					<h4>Horizontal Motion</h4>
+					<p>Position (x): ${x.toFixed(2)} m</p>
+					<p>Velocity (vₓ): ${vx.toFixed(2)} m/s</p>
+					<h4>Vertical Motion</h4>
+					<p>Position (y): ${y.toFixed(2)} m</p>
+					<p>Velocity (vᵧ): ${vy.toFixed(2)} m/s</p>
+					<p>vᵧ² = ${vy2.toFixed(2)} (m²/s²)</p>
+				`;
+			}
+		</script>
+	</body>
+</html>

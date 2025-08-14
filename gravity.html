@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Gravitational Force Calculator</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<h1>Gravitational Force Between Two Objects</h1>
+		<h3>Please enter mass of the first object (m₁)</h3>
+		<input type="number" id="mass1" placeholder="Mass 1 (kg)" required>
+		<br>
+		<h3>Please enter mass of the second object (m₂)</h3>
+		<input type="number" id="mass2" placeholder="Mass 2 (kg)" required>
+		<br>
+		<h3>Please enter the distance between the centers of the objects (r)</h3>
+		<input type="number" id="distance" placeholder="Distance (m)" required>
+		<br>
+		<br>
+		<button id="calculate" onclick="calculate()">Calculate</button>
+		<div id="result"></div>
+		<br>
+		<p>Note: This calculator uses the formula F = G × (m₁ × m₂) / r², where G = 6.674 × 10⁻¹¹ N⋅m²/kg².</p>
+		<br>
+
+		<script>
+			function calculate() {
+				const m1 = parseFloat(document.getElementById('mass1').value);
+				const m2 = parseFloat(document.getElementById('mass2').value);
+				const r = parseFloat(document.getElementById('distance').value);
+				const G = 6.674e-11; // Gravitational constant in N⋅m²/kg²
+
+				if (isNaN(m1) || isNaN(m2) || isNaN(r) || m1 <= 0 || m2 <= 0 || r <= 0) {
+					document.getElementById('result').innerText = 'Please enter valid positive numbers for both masses and distance.';
+					return;
+				}
+
+				const force = G * (m1 * m2) / (r * r); // Gravitational force in Newtons
+
+				document.getElementById('result').innerHTML = `
+					<p>Gravitational Force (F): ${force.toExponential(3)} N</p>
+				`;
+			}
+		</script>
+	</body>
+</html>
