@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Harmonic Motion Calculator</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <h1>Simple Harmonic Motion Calculator</h1>
+        <h3>Please enter the mass (m) of the object</h3>
+        <input type="number" id="mass" placeholder="Mass (kg)" required>
+        <br>
+        <h3>Please enter the spring constant (k)</h3>
+        <input type="number" id="spring" placeholder="Spring constant (N/m)" required>
+        <br>
+        <h3>Please enter the displacement (x) from equilibrium</h3>
+        <input type="number" id="displacement" placeholder="Displacement (m)" required>
+        <br>
+        <br>
+        <button id="calculate" onclick="calculate()">Calculate</button>
+        <div id="result"></div>
+        <br>
+        <p>Note: This calculator assumes a simple harmonic oscillator (like a mass on a spring). It calculates the restoring force, angular frequency, and period.</p>
+        <br>
+        <script>
+            function calculate() {
+                const m = parseFloat(document.getElementById('mass').value);
+                const k = parseFloat(document.getElementById('spring').value);
+                const x = parseFloat(document.getElementById('displacement').value);
+                if (isNaN(m) || isNaN(k) || isNaN(x) || m <= 0 || k <= 0) {
+                    document.getElementById('result').innerText = 'Please enter valid positive numbers for mass and spring constant.';
+                    return;
+                }
+                // Restoring force F = -kx
+                const F = -k * x;
+                // Angular frequency ω = sqrt(k/m)
+                const omega = Math.sqrt(k / m);
+                // Period T = 2π * sqrt(m/k)
+                const T = 2 * Math.PI * Math.sqrt(m / k);
+                document.getElementById('result').innerHTML = `
+                    <p>Restoring Force (F): ${F.toFixed(2)} N</p>
+                    <p>Angular Frequency (ω): ${omega.toFixed(2)} rad/s</p>
+                    <p>Period (T): ${T.toFixed(2)} s</p>
+                `;
+            }
+        </script>
+    </body>
+</html>
