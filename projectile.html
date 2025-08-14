@@ -8,63 +8,92 @@
 	</head>
 	<body>
 		<h1>Projectile Motion Calculator</h1>
-		<h3>Horizontal Motion</h3>
-		<label>Initial horizontal position (x₀):</label>
-		<input type="number" id="x0" placeholder="x₀ (m)" required>
-		<br>
-		<label>Initial horizontal velocity (v₀ₓ):</label>
-		<input type="number" id="v0x" placeholder="v₀ₓ (m/s)" required>
-		<br>
-		<h3>Vertical Motion</h3>
-		<label>Initial vertical position (y₀):</label>
-		<input type="number" id="y0" placeholder="y₀ (m)" required>
-		<br>
-		<label>Initial vertical velocity (v₀ᵧ):</label>
-		<input type="number" id="v0y" placeholder="v₀ᵧ (m/s)" required>
-		<br>
+		<label for="motionType">Choose motion type:</label>
+		<select id="motionType" onchange="updateInputs()">
+			<option value="horizontal">Horizontal Motion</option>
+			<option value="vertical">Vertical Motion</option>
+		</select>
+		<br><br>
+		<div id="horizontalInputs">
+			<label>Initial horizontal position (x₀):</label>
+			<input type="number" id="x0" placeholder="x₀ (m)">
+			<br>
+			<label>Initial horizontal velocity (v₀ₓ):</label>
+			<input type="number" id="v0x" placeholder="v₀ₓ (m/s)">
+			<br>
+		</div>
+		<div id="verticalInputs" style="display:none;">
+			<label>Initial vertical position (y₀):</label>
+			<input type="number" id="y0" placeholder="y₀ (m)">
+			<br>
+			<label>Initial vertical velocity (v₀ᵧ):</label>
+			<input type="number" id="v0y" placeholder="v₀ᵧ (m/s)">
+			<br>
+		</div>
 		<h3>Time</h3>
-		<input type="number" id="time" placeholder="Time (s)" required>
+		<input type="number" id="time" placeholder="Time (s)">
 		<br>
 		<br>
 		<button id="calculate" onclick="calculate()">Calculate</button>
 		<div id="result"></div>
 		<br>
-		<p>Note: This calculator assumes no air resistance. Horizontal motion uses x = x₀ + v₀ₓt, vertical motion uses y = y₀ + v₀ᵧt - (1/2)gt², and velocities are calculated as vₓ = v₀ₓ, vᵧ = v₀ᵧ - gt.</p>
+		<p>Note: This calculator assumes no air resistance. Choose horizontal or vertical motion to see the relevant calculation.</p>
 		<br>
 
 		<script>
-			function calculate() {
-				const x0 = parseFloat(document.getElementById('x0').value);
-				const v0x = parseFloat(document.getElementById('v0x').value);
-				const y0 = parseFloat(document.getElementById('y0').value);
-				const v0y = parseFloat(document.getElementById('v0y').value);
-				const t = parseFloat(document.getElementById('time').value);
-				const g = 9.8; // Acceleration due to gravity in m/s²
+			function updateInputs() {
+				const type = document.getElementById('motionType').value;
+				document.getElementById('horizontalInputs').style.display = type === 'horizontal' ? '' : 'none';
+				document.getElementById('verticalInputs').style.display = type === 'vertical' ? '' : 'none';
+			}
 
-				if ([x0, v0x, y0, v0y, t].some(val => isNaN(val))) {
-					document.getElementById('result').innerText = 'Please enter valid numbers for all fields.';
+			function calculate() {
+				const type = document.getElementById('motionType').value;
+				const t = parseFloat(document.getElementById('time').value);
+				const g = 9.8;
+				let result = '';
+
+				if (isNaN(t)) {
+					document.getElementById('result').innerText = 'Please enter a valid number for time.';
 					return;
 				}
 
-				// Horizontal motion
-				const x = x0 + v0x * t;
-				const vx = v0x;
-
-				// Vertical motion
-				const y = y0 + v0y * t - 0.5 * g * Math.pow(t, 2);
-				const vy = v0y - g * t;
-				const vy2 = Math.pow(v0y, 2) - 2 * g * (y - y0);
-
-				document.getElementById('result').innerHTML = `
-					<h4>Horizontal Motion</h4>
-					<p>Position (x): ${x.toFixed(2)} m</p>
-					<p>Velocity (vₓ): ${vx.toFixed(2)} m/s</p>
-					<h4>Vertical Motion</h4>
-					<p>Position (y): ${y.toFixed(2)} m</p>
-					<p>Velocity (vᵧ): ${vy.toFixed(2)} m/s</p>
-					<p>vᵧ² = ${vy2.toFixed(2)} (m²/s²)</p>
-				`;
+				if (type === 'horizontal') {
+					const x0 = parseFloat(document.getElementById('x0').value);
+					const v0x = parseFloat(document.getElementById('v0x').value);
+					if (isNaN(x0) || isNaN(v0x)) {
+						document.getElementById('result').innerText = 'Please enter valid numbers for horizontal position and velocity.';
+						return;
+					}
+					const x = x0 + v0x * t;
+					const vx = v0x;
+					result = `
+						<h4>Horizontal Motion</h4>
+						<p>Position (x): ${x.toFixed(2)} m</p>
+						<p>Velocity (vₓ): ${vx.toFixed(2)} m/s</p>
+					`;
+				} else {
+					const y0 = parseFloat(document.getElementById('y0').value);
+					const v0y = parseFloat(document.getElementById('v0y').value);
+					if (isNaN(y0) || isNaN(v0y)) {
+						document.getElementById('result').innerText = 'Please enter valid numbers for vertical position and velocity.';
+						return;
+					}
+					const y = y0 + v0y * t - 0.5 * g * Math.pow(t, 2);
+					const vy = v0y - g * t;
+					const vy2 = Math.pow(v0y, 2) - 2 * g * (y - y0);
+					result = `
+						<h4>Vertical Motion</h4>
+						<p>Position (y): ${y.toFixed(2)} m</p>
+						<p>Velocity (vᵧ): ${vy.toFixed(2)} m/s</p>
+						<p>vᵧ² = ${vy2.toFixed(2)} (m²/s²)</p>
+					`;
+				}
+				document.getElementById('result').innerHTML = result;
 			}
+
+			// Initialize correct input visibility on page load
+			window.onload = updateInputs;
 		</script>
 	</body>
-</html>
+	</html>
